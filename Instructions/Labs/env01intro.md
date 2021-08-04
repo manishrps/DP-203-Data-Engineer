@@ -53,7 +53,7 @@
 
    ![stop vm rg](images/resourcestab-env3.png "stop vm") 
    
-   **Environment Uptime** : Lab environments typically include Virtual Machines and SQL Pool. VMs and SQL Pool have uptime limits to keep the cloud costs under control.Lab Duration and uptime limits are defined based on the average required time to complete the labs along with some buffer. This Lab environment includes 18 Hours of SQL Pool and VM uptime limit. Once the uptime limit is reached, all resources will remain in stopped/pause resource.
+   **Environment Uptime** : Lab environments typically include Virtual Machines and SQL Pool. VMs and SQL Pool have uptime limits to keep the cloud costs under control.Lab Duration and uptime limits are defined based on the average required time to complete the labs along with some buffer. This Lab environment includes 10 Hours of SQL Pool and 18 hours of VM uptime limit. Once the uptime limit is reached, all resources will remain in stopped/pause resource.
 
 1. Click on **Next** from the bottom right corner and follow the instructions to perform the lab.
 
