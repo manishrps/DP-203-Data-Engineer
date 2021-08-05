@@ -39,21 +39,23 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
 
     ![The Azure Databricks service is highlighted.](images/select-databricks-workspace.png "Select Azure Databricks service")
 
-2. Select **Launch Workspace** to open your Databricks workspace in a new tab.
+2. Click on the **URL** from the Overview to open your Databricks workspace in a new tab.
 
-    ![The Azure Databricks Launch Workspace button is displayed.](images/databricks-launch-workspace.png "Launch Workspace")
+    ![The Azure Databricks Launch Workspace button is displayed.](images/databricks-workspace.png "Launch Workspace")
 
 3. In the left-hand menu of your Databricks workspace, select **Compute**.
+
 4. Select **Create Cluster** to add a new cluster.
 
-    ![The create cluster page](images/create-a-cluster.png)
+    ![The create cluster page](images/cluster.png)
 
 5. Enter a name for your cluster, such as `Test Cluster`.
 6. Select the **Databricks RuntimeVersion**. We recommend the latest runtime and **Scala 2.12**.
-7. Select the default values for the cluster configuration.
-8. Check **Spot instances** to optimize costs.
-9. Select **Create Cluster**.
-10. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
+7. Uncheck the Enable auto scaling option
+8. Ensure Terminate after **30** minutes of inactivity is checked. Set the value to be **30** if it is set to different value.
+9. Check **Spot instances** to optimize costs.
+10. Select **Create Cluster**.
+11. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
 
 #### Task 2: Clone the Databricks archive
 
