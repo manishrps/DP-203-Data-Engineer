@@ -39,7 +39,7 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
 
     ![The Azure Databricks service is highlighted.](images/select-databricks-workspace.png "Select Azure Databricks service")
 
-2. Click on the **URL** from the Overview to open your Databricks workspace in a new tab.
+2. Click on the **URL** from the Overview to open your Databricks workspace in a new tab, Click on **Sign in to AzureAD**.
 
     ![The Azure Databricks Launch Workspace button is displayed.](images/databricks-workspace.png "Launch Workspace")
 
@@ -74,7 +74,7 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
 1. Select the **11-Delta-Lake-Architecture** folder that appears.
 1. To enable you to see files being created in the notebook, click the **user name** in upper right hand corner of the Databricks workspace, and then click **Admin Console**
 1. In the Admin console screen, click **Workspace Settings**.
-1. In **Advanced** section, enable **DBFS File Viewer**.
+1. In **Advanced** section, enable **DBFS File Browser**.
 1. In the left pane, select **Workspace** > **Users**, and select your username (the entry with the house icon), and click on the **11-Delta-Lake-Architecture** folder.
 
 #### Task 2: Complete the following notebook
