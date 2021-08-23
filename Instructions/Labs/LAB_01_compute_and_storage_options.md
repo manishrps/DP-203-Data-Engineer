@@ -1,8 +1,3 @@
----
-lab:
-    title: 'Explore compute and storage options for data engineering workloads'
-    module: 'Module 1'
----
 
 # Module 1 - Explore compute and storage options for data engineering workloads
 
@@ -39,23 +34,20 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
 
     ![The Azure Databricks service is highlighted.](images/select-databricks-workspace.png "Select Azure Databricks service")
 
-2. Click on the **URL** from the Overview to open your Databricks workspace in a new tab, Click on **Sign in to AzureAD**.
+2. Select **Launch Workspace** to open your Databricks workspace in a new tab.
 
-    ![The Azure Databricks Launch Workspace button is displayed.](images/databricks-workspace.png "Launch Workspace")
+    ![The Azure Databricks Launch Workspace button is displayed.](images/databricks-launch-workspace.png "Launch Workspace")
 
 3. In the left-hand menu of your Databricks workspace, select **Compute**.
-
 4. Select **Create Cluster** to add a new cluster.
 
-    ![The create cluster page](images/cluster.png)
+    ![The create cluster page](images/create-a-cluster.png)
 
 5. Enter a name for your cluster, such as `Test Cluster`.
 6. Select the **Databricks RuntimeVersion**. We recommend the latest runtime and **Scala 2.12**.
-7. Uncheck the Enable auto scaling option
-8. Ensure Terminate after **30** minutes of inactivity is checked. Set the value to be **30** if it is set to different value.
-9. Check **Spot instances** to optimize costs.
-10. Select **Create Cluster**.
-11. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
+7. Select the default values for the cluster configuration.
+8. Select **Create Cluster**.
+9. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
 
 #### Task 2: Clone the Databricks archive
 
@@ -74,7 +66,7 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
 1. Select the **11-Delta-Lake-Architecture** folder that appears.
 1. To enable you to see files being created in the notebook, click the **user name** in upper right hand corner of the Databricks workspace, and then click **Admin Console**
 1. In the Admin console screen, click **Workspace Settings**.
-1. In **Advanced** section, enable **DBFS File Browser**.
+1. In **Advanced** section, enable **DBFS File Viewer**.
 1. In the left pane, select **Workspace** > **Users**, and select your username (the entry with the house icon), and click on the **11-Delta-Lake-Architecture** folder.
 
 #### Task 2: Complete the following notebook
@@ -139,15 +131,15 @@ dfCustomers.show(10)
 hyperspace = Hyperspace(spark)
 ```
 
-Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
+    Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
 
- 1. Navigate to the **Data** hub.
+    1. Navigate to the **Data** hub.
 
-    ![The data hub is highlighted.](images/data-hub.png "Data hub")
+        ![The data hub is highlighted.](images/data-hub.png "Data hub")
 
- 2. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
+    2. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
 
-    ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
+        ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
 
 7. Run the new cell. It will load the two DataFrames with data from the data lake and initialize Hyperspace.
 
