@@ -131,15 +131,15 @@ dfCustomers.show(10)
 hyperspace = Hyperspace(spark)
 ```
 
-    Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
+Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
 
-    1. Navigate to the **Data** hub.
+1. Navigate to the **Data** hub.
 
-        ![The data hub is highlighted.](images/data-hub.png "Data hub")
+   ![The data hub is highlighted.](images/data-hub.png "Data hub")
 
-    2. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
+2. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
 
-        ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
+   ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
 
 7. Run the new cell. It will load the two DataFrames with data from the data lake and initialize Hyperspace.
 
