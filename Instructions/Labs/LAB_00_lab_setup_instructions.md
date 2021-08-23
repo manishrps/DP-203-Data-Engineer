@@ -10,7 +10,7 @@ The following instructions enables learners to prepare their lab environments fo
 
 **Time to complete**: It takes around 5 minutes to perform the steps below and initiate the automated setup scripts. The scripts may take an hour or more to complete.
 
-> **Note**: These instructions are designed to be used in the pre-installed virtual machine provided for the course. If you aren't using the pre-installed virtual machine, you can follow the [full setup instructions](00FullSetupREADME.md).
+> **Note**: These instructions are designed to be used in the pre-installed virtual machine provided for the course.
 
 ## Requirements
 
@@ -21,6 +21,8 @@ Before starting setup, you will need an Azure Account with the ability to create
 Perform the following tasks to prepare your environment for the labs.
 
 1. Use the Windows **Search** box to search for **Windows PowerShell**, and then run it as an administrator.
+
+    > **Note**: Make sure you run **Windows Powershell**, <u>not</u> Windows PowerShell ISE; and be sure to run it as Administrator.
 
 2. In Windows PowerShell, run the following commands to download the required course files. This may take a few minutes.
 
@@ -38,31 +40,25 @@ Perform the following tasks to prepare your environment for the labs.
     Set-ExecutionPolicy Unrestricted
     ```
 
-    > **Note**: If you receive a prompt that you are installing the module from an untrusted repository, select **Yes to All** to proceed with the setup.
+    > **Note**: If you receive a prompt that you are installing the module from an untrusted repository, enter **A** to select the *Yes to All* option.
 
 4. In Windows PowerShell, use the following command to change directories to the folder containing the automation scripts.
 
     ```
     cd C:\dp-203\data-engineering-ilt-deployment\Allfiles\00\artifacts\environment-setup\automation\
     ```
-
-5. In Windows PowerShell, run the following command to sign into Azure.
-
-    ```
-    az login
-    ```
-
-    When your browser opens, sign into your Azure account. After signing in, you can close the browser and return to Windows PowerShell, which should display the Azure subscriptions to which you have access. If you have multiple subscriptions with the same name, use the unique IDs to identify the subscription that you want to use in the labs.
-
-6. In Windows PowerShell, enter the following command to run the setup script:
+    
+5. In Windows PowerShell, enter the following command to run the setup script:
 
     ```
     .\dp-203-setup.ps1
     ```
 
-7. When prompted, sign into your Azure account again (this is required so that the script can manage resources in your Azure subscription).
+6. When prompted to sign into Azure, and your browser opens; sign in using your credentials. After signing in, you can close the browser and return to Windows PowerShell, which should display the Azure subscriptions to which you have access. If you have multiple subscriptions with the same name, use the unique IDs to identify the subscription that you want to use in the labs.
 
-8. If you have more than one Azure subscription, when prompted, select the one you want to use in the labs.
+7. When prompted, sign into your Azure account again (this is required so that the script can manage resources in your Azure subscription - be sure you use the same credentials as before).
+
+8. If you have more than one Azure subscription, when prompted, select the one you want to use in the labs by entering its number in the list of subscriptions.
 
 9. When prompted, enter a suitably complex password for the SQL Database (make a note of this password in case you need it later).
 
