@@ -1,9 +1,8 @@
-
 # Module 1 - Explore compute and storage options for data engineering workloads
 
-This module teaches ways to structure the data lake, and to optimize the files for exploration, streaming, and batch workloads. The student will learn how to organize the data lake into levels of data refinement as they transform files through batch and stream processing. Then they will learn how to create indexes on their datasets, such as CSV, JSON, and Parquet files, and use them for potential query and workload acceleration.
+This module teaches ways to structure the data lake, and to optimize the files for exploration, streaming, and batch workloads. You will learn how to organize the data lake into levels of data refinement as they transform files through batch and stream processing. Then you will learn how to create indexes on their datasets, such as CSV, JSON, and Parquet files, and use them for potential query and workload acceleration.
 
-In this module, the student will be able to:
+After completing this module, you will be able to:
 
 - Combine streaming and batch processing with a single pipeline
 - Organize the data lake into levels of file transformation
@@ -13,6 +12,7 @@ In this module, the student will be able to:
 
 - [Module 1 - Explore compute and storage options for data engineering workloads](#module-1---explore-compute-and-storage-options-for-data-engineering-workloads)
   - [Lab details](#lab-details)
+    - [Lab setup and pre-requisites](#Lab-setup-and-pre-requisites)
   - [Lab 1 - Delta Lake architecture](#lab-1---delta-lake-architecture)
     - [Exercise 1: Complete the lab notebook](#exercise-1-complete-the-lab-notebook)
       - [Task 1: Clone the Databricks archive](#task-1-clone-the-databricks-archive)
@@ -21,6 +21,10 @@ In this module, the student will be able to:
       - [Task 1: Index the Data Lake storage with Hyperspace](#task-1-index-the-data-lake-storage-with-hyperspace)
       - [Task 2: Explore the Data Lake storage with the MSSparkUtil library](#task-2-explore-the-data-lake-storage-with-the-mssparkutil-library)
     - [Resources](#resources)
+
+### Lab setup and pre-requisites
+
+- You have successfully completed the setup steps to create your lab environment.
 
 ## Lab 1 - Delta Lake architecture
 
@@ -44,10 +48,11 @@ In this lab, you will use an Azure Databricks workspace and perform Structured S
     ![The create cluster page](images/create-a-cluster.png)
 
 5. Enter a name for your cluster, such as `Test Cluster`.
-6. Select the **Databricks RuntimeVersion**. We recommend the latest runtime and **Scala 2.12**.
-7. Select the default values for the cluster configuration.
-8. Select **Create Cluster**.
-9. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
+6. Select a **single Node** cluster mode.
+7. Select the **Databricks RuntimeVersion**. We recommend the latest runtime and **Scala 2.12**.
+8. Select the default values for the cluster configuration.
+9. Select **Create Cluster**.
+10. Wait for the cluster to start. Please note you will have to wait 5 - 7 minutes for the cluster to start up before moving onto the next task.
 
 #### Task 2: Clone the Databricks archive
 
@@ -131,17 +136,17 @@ dfCustomers.show(10)
 hyperspace = Hyperspace(spark)
 ```
 
-Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
+7. Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primary ADLS Gen2 account for your Synapse workspace. To find this, do the following:
 
-1. Navigate to the **Data** hub.
+8. Navigate to the **Data** hub.
 
-   ![The data hub is highlighted.](images/data-hub.png "Data hub")
+    ![The data hub is highlighted.](images/data-hub.png "Data hub")
 
-2. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
+9. Select the **Linked** tab **(1)**, expand the Azure Data Lake Storage Gen2 group, then make note of the primary ADLS Gen2 name **(2)** next to the name of the workspace.
 
-   ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
+    ![The primary ADLS Gen2 name is displayed.](images/adlsgen2-name.png "ADLS Gen2 name")
 
-7. Run the new cell. It will load the two DataFrames with data from the data lake and initialize Hyperspace.
+10. Run the new cell. It will load the two DataFrames with data from the data lake and initialize Hyperspace.
 
     ![Load data from the data lake and initialize Hyperspace](images/lab-02-ex-02-task-02-initialize-hyperspace.png "Initialize Hyperspace")
 
@@ -149,11 +154,11 @@ Replace the `REPLACE_WITH_YOUR_DATALAKE_NAME` value with the name of your primar
     >
     > The first time you execute a cell in the notebook will take a few minutes since it must start a new Spark cluster. Each subsequent cell execution should be must faster.
 
-8. Select the **+** button beneath the cell output, then select **</> Code cell** to create a new code cell beneath.
+11. Select the **+** button beneath the cell output, then select **</> Code cell** to create a new code cell beneath.
 
     ![The plus button and code cell button are both highlighted.](images/new-code-cell.png "New code cell")
 
-9. Paste the following code into the new cell:
+12. Paste the following code into the new cell:
 
 ```python
 #create indexes: each one contains a name, a set of indexed columns and a set of included columns
@@ -165,7 +170,7 @@ hyperspace.createIndex(dfCustomers, indexConfigCustomers)	# only create index on
 hyperspace.indexes().show()
 ```
 
-10. Run the new cell. It will create two indexes and display their structure.
+13. Run the new cell. It will create two indexes and display their structure.
 
     ![Create new indexes and display their structure](images/lab-02-ex-02-task-02-create-indexes.png "New indexes")
 
@@ -177,11 +182,11 @@ hyperspace.indexes().show()
     df1.explain(True)
     ```
 
-12. Run the new cell. The output will show that the physical execution plan is not taking into account any of the indexes (performs a file scan on the original data file).
+14. Run the new cell. The output will show that the physical execution plan is not taking into account any of the indexes (performs a file scan on the original data file).
 
     ![Hyperspace explained - no indexes used](images/lab-02-ex-02-task-02-explain-hyperspace-01.png)
 
-13. Now add another new cell to your notebook with the following code (notice the extra line at the beginning used to enable Hyperspace optimization in the Spark engine):
+15. Now add another new cell to your notebook with the following code (notice the extra line at the beginning used to enable Hyperspace optimization in the Spark engine):
 
 ```python
 # Enable Hyperspace - Hyperspace optimization rules become visible to the Spark optimizer and exploit existing Hyperspace indexes to optimize user queries
@@ -191,11 +196,11 @@ df1.show()
 df1.explain(True)
 ```
 
-14. Run the new cell. The output will show that the physical execution plan is now using the index instead of the original data file.
+16. Run the new cell. The output will show that the physical execution plan is now using the index instead of the original data file.
 
     ![Hyperspace explained - using an index](images/lab-02-ex-02-task-02-explain-hyperspace-02.png)
 
-15. Hyperspace provides an Explain API that allows you to compare the execution plans without indexes vs. with indexes. Add a new cell with the following code:
+17. Hyperspace provides an Explain API that allows you to compare the execution plans without indexes vs. with indexes. Add a new cell with the following code:
 
 ```python
 df1 = dfSales.filter("""CustomerId = 6""").select("""TotalAmount""")
@@ -204,11 +209,11 @@ spark.conf.set("spark.hyperspace.explain.displayMode", "html")
 hyperspace.explain(df1, True, displayHTML)
 ```
 
-16. Run the new cell. The output shows a comparison `Plan with indexes` vs. `Plan without indexes`. Observe how, in the first case the index file is used while in the second case the original data file is used.
+18. Run the new cell. The output shows a comparison `Plan with indexes` vs. `Plan without indexes`. Observe how, in the first case the index file is used while in the second case the original data file is used.
 
     ![Hyperspace explained - plan comparison](images/lab-02-ex-02-task-02-explain-hyperspace-03.png)
 
-17. Let's investigate now a more complex case, involving a join operation. Add a new cell with the following code:
+19. Let's investigate now a more complex case, involving a join operation. Add a new cell with the following code:
 
 ```python
 eqJoin = dfSales.join(dfCustomers, dfSales.CustomerId == dfCustomers.CustomerId).select(dfSales.TotalAmount, dfCustomers.FullName)
@@ -216,7 +221,7 @@ eqJoin = dfSales.join(dfCustomers, dfSales.CustomerId == dfCustomers.CustomerId)
 hyperspace.explain(eqJoin, True, displayHTML)
 ```
 
-18. Run the new cell. The output shows again a comparison `Plan with indexes` vs. `Plan without indexes`, where indexes are used in the first case and the original data files in the second.
+20. Run the new cell. The output shows again a comparison `Plan with indexes` vs. `Plan without indexes`, where indexes are used in the first case and the original data files in the second.
 
     ![Hyperspace explained - plan comparison for join](images/lab-02-ex-02-task-02-explain-hyperspace-04.png)
 
