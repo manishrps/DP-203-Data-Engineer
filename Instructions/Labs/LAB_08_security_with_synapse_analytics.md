@@ -1,8 +1,8 @@
 # Module 8 - End-to-end security with Azure Synapse Analytics
 
-In this module, students will learn how to secure a Synapse Analytics workspace and its supporting infrastructure. The student will observe the SQL Active Directory Admin, manage IP firewall rules, manage secrets with Azure Key Vault and access those secrets through a Key Vault linked service and pipeline activities. The student will understand how to implement column-level security, row-level security, and dynamic data masking when using dedicated SQL pools.
+In this module, you will learn how to secure a Synapse Analytics workspace and its supporting infrastructure. You will observe the SQL Active Directory Admin, manage IP firewall rules, manage secrets with Azure Key Vault and access those secrets through a Key Vault linked service and pipeline activities. You will understand how to implement column-level security, row-level security, and dynamic data masking when using dedicated SQL pools.
 
-In this module, the student will be able to:
+After completing this module, you will be able to:
 
 - Secure Azure Synapse Analytics supporting infrastructure
 - Secure the Azure Synapse Analytics workspace and managed services
@@ -12,7 +12,6 @@ In this module, the student will be able to:
 
 - [Module 8 - End-to-end security with Azure Synapse Analytics](#module-8---end-to-end-security-with-azure-synapse-analytics)
   - [Lab details](#lab-details)
-  - [Resource naming throughout this lab](#resource-naming-throughout-this-lab)
   - [Lab setup and pre-requisites](#lab-setup-and-pre-requisites)
   - [Exercise 0: Start the dedicated SQL pool](#exercise-0-start-the-dedicated-sql-pool)
   - [Exercise 1 - Securing Azure Synapse Analytics supporting infrastructure](#exercise-1---securing-azure-synapse-analytics-supporting-infrastructure)
@@ -38,28 +37,10 @@ This lab will guide you through several  security-related steps that cover an en
 
 2. Introspect the data that is contained within the SQL Pools in the context of potential sensitive/confidential data disclosure. Identify the columns representing sensitive data, then secure them by adding column-level security. Determine at the table level what data should be hidden from specific groups of users then define security predicates to apply row level security (filters) on the table. If desired, you also have the option of applying Dynamic Data Masking to mask sensitive data returned in queries on a column by column basis.
 
-## Resource naming throughout this lab
-
-For the remainder of this guide, the following terms will be used for various ASA-related resources (make sure you replace them with actual names and values):
-
-| Azure Synapse Analytics Resource  | To be referred to                                                                  |
-|-----------------------------------|------------------------------------------------------------------------------------|
-| Workspace resource group          | `WorkspaceResourceGroup`                                                           |
-| Workspace / workspace name        | `Workspace`                                                                        |
-| Primary Storage Account           | `PrimaryStorage`                                                                   |
-| Default file system container     | `DefaultFileSystem`                                                                |
-| SQL Pool                          | `SqlPool01`                                                                        |
-| SQL Serverless Endpoint           | `SqlServerless01`                                                                  |
-| Active Directory Principal of  New User         | `user@domain.com`                                                    |
-| SQL username of New User          | `newuser`                                                                          |
-| Azure Key Vault                   | `KeyVault01`                                                                       |
-| Azure Key Vault Private Endpoint Name  | `KeyVaultPrivateEndpointName`                                                 |
-| Azure Subscription                | `WorkspaceSubscription`                                                            |
-| Azure Region                      | `WorkspaceRegion`                                                                  |
 
 ## Lab setup and pre-requisites
 
-- You have successfully completed [Module 0](../00/README.md) to create your lab environment.
+- Before starting this lab, you must complete **Lab 7: *Integrate data from notebooks with Azure Data Factory or Azure Synapse Pipelines***.
 
 ## Exercise 0: Start the dedicated SQL pool
 

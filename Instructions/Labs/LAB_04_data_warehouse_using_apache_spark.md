@@ -1,8 +1,8 @@
 # Module 4 - Explore, transform, and load data into the Data Warehouse using Apache Spark
 
-This module teaches how to explore data stored in a data lake, transform the data, and load data into a relational data store. The student will explore Parquet and JSON files and use techniques to query and transform JSON files with hierarchical structures. Then the student will use Apache Spark to load data into the data warehouse and join Parquet data in the data lake with data in the dedicated SQL pool.
+This module teaches how to explore data stored in a data lake, transform the data, and load data into a relational data store. You will explore Parquet and JSON files and use techniques to query and transform JSON files with hierarchical structures. Then you will use Apache Spark to load data into the data warehouse and join Parquet data in the data lake with data in the dedicated SQL pool.
 
-In this module, the student will be able to:
+After completing this module, you will be able to:
 
 - Perform Data Exploration in Synapse Studio
 - Ingest data with Spark notebooks in Azure Synapse Analytics
@@ -33,7 +33,7 @@ In this module, the student will be able to:
 
 ## Lab setup and pre-requisites
 
-- You have successfully completed [Module 0](../00/README.md) to create your lab environment.
+- You have successfully completed the setup steps to create your lab environment.
 
 ## Exercise 0: Create a new dedicated SQL pool and run setup script
 
@@ -53,7 +53,7 @@ This lab requires a dedicated SQL pool. As a first step, create a new dedicated 
 
     ![The new button is highlighted.](images/new-dedicated-sql-pool.png "New dedicated SQL pool")
 
-4. In the `Create dedicated SQL pool` form, enter **`SQLPool01`** (copy and paste since the name must be exact) for the pool name, then set the performance level to **DW200c**. Select **Create** on the validation step.
+4. In the `Create dedicated SQL pool` form, enter **`SQLPool01`** (copy and paste since the name must be exact) for the pool name, then set the performance level to **DW200c**. Click **Review + create**. Select **Create** on the validation step.
 
     ![The form is completed as described.](images/create-dedicated-sql-pool.png "Create dedicated SQL pool")
 
@@ -71,7 +71,7 @@ This lab requires a dedicated SQL pool. As a first step, create a new dedicated 
     Set-ExecutionPolicy Unrestricted
     ```
 
-    > [!Note]: If you receive a prompt that you are installing the module from an untrusted repository, select **Yes to All** to proceed with the setup.
+    > **Note**: If you receive a prompt that you are installing the module from an untrusted repository, select **Yes to All** to proceed with the setup.
 
 4. Change directories to the root of this repo within your local file system.
 
@@ -85,9 +85,9 @@ This lab requires a dedicated SQL pool. As a first step, create a new dedicated 
     Connect-AzAccount
     ```
 
-    > [!WARNING]: You may receive the message "TenantId 'xxxxxx-xxxx-xxxx-xxxx' contains more than one active subscription.
+    > **WARNING**: You may receive the message "TenantId 'xxxxxx-xxxx-xxxx-xxxx' contains more than one active subscription.
 
-6. Execute the following. You will be directed to the browser to sign into your Azure account. Once you have signed in, move to the next step:
+6. You will be directed to the browser to sign into your Azure account. Once you have signed in, move to the next step. Execute the following:
 
     ```powershell
     az login
@@ -95,7 +95,7 @@ This lab requires a dedicated SQL pool. As a first step, create a new dedicated 
 
 7. **Wait until the dedicated SQL pool is created**, then execute `.\02-environment-setup-sql.ps1`
 
-   1. You will be prompted to setup your Azure PowerShell and Azure CLI context.
+   1. You may be prompted to setup your Azure PowerShell and Azure CLI context.
 
    2. If you have more than one Azure Subscription, you will be prompted to enter the name of your desired Azure Subscription. You can copy and paste the value from the list to select one. For example:
 
@@ -108,18 +108,18 @@ This lab requires a dedicated SQL pool. As a first step, create a new dedicated 
 > **NOTE** This script will take about 2-3 minutes to complete.
 > 
 > If it seems as though the script hangs while creating linked services for the SQLPool01 dedicated SQL pool (there are 3), hit `Enter` on the keyboard. This tends to refresh the PowerShell script and allows it to continue to the end.
-
-#### Potential errors that you can ignore
-
-You may encounter a few errors and warnings during the script execution. The errors below can safely be ignored:
-
-1. The following error may occur when creating SQL users and adding role assignments in the dedicated SQL pool, and can safely be ignored: `Principal 'xxx@xxx.com' could not be created. Only connections established with Active Directory accounts can create other Active Directory users.`
-
-    ![Error is displayed.](images/error-cannot-create-principal.png "Cannot create principal")
-
-2. The following error may occur when executing `07-create-wwi-perf-sale-heap with label CTAS : Sale_Heap`, and can safely be ignored: `Cannot index into a null array.`
-
-    ![Error is displayed.](images/error-cannot-index-into-null-array.png "Cannot index into a null array")
+>
+> ### Potential errors that you can ignore
+>
+> You may encounter a few errors and warnings during the script execution. The errors below can safely be ignored:
+> 
+> 1. The following error may occur when creating SQL users and adding role assignments in the dedicated SQL pool, and can safely be ignored: `Principal 'xxx@xxx.com' could not be created. Only connections established with Active Directory accounts can create other Active Directory users.`
+>
+>    ![Error is displayed.](images/error-cannot-create-principal.png "Cannot create principal")
+>
+>2. The following error may occur when executing `07-create-wwi-perf-sale-heap with label CTAS : Sale_Heap`, and can safely be ignored: `Cannot index into a null array.`
+>
+>    ![Error is displayed.](images/error-cannot-index-into-null-array.png "Cannot index into a null array")
 
 ## Exercise 1: Perform Data Exploration in Synapse Studio
 
@@ -153,7 +153,7 @@ Azure Synapse Studio provides numerous ways to explore data, from a simple previ
 
     ![The sale-poc folder is highlighted within the wwi-02 container in the data lake.](images/wwi-02-sale-poc.png "sale-poc folder")
 
-6. The `sale-poc` contains sales data for the month of May, 2017. There are 31 files in the folder, one for each day of the month. These files were imported by a temporary process to account for an issue with Tailspin's import process. Let's now take a few minutes to explore some of the files.
+6. The `sale-poc` contains sales data for the month of May, 2017. There are some files in the folder. These files were imported by a temporary process to account for an issue with Tailspin's import process. Let's now take a few minutes to explore some of the files.
 
 7. Right-click the first file in the list, `sale-20170501.csv`, and select **Preview** from the context menu.
 
@@ -327,7 +327,7 @@ In this task, you will use a Synapse Spark notebook to explore a few of the file
 
     ![On the Develop hub, the Add New Resource (+) button is highlighted and Import is highlighted in the menu.](images/develop-hub-add-new-resource-import.png "Develop hub import notebook")
 
-3. Select the **Lab 2 - Explore with Spark** in the C:\dp203\data-engineering-ilt-deployment\Allfiles\synapse-apache-spark-notebooks folder.
+3. Select the **Lab 2 - Explore with Spark** in the C:\dp-203\data-engineering-ilt-deployment\Allfiles\synapse-apache-spark-notebooks folder.
 
 4. Follow the instructions contained within the notebook to complete the remainder of this task. When you are done with the notebook, return to this guide and continue with the next section.
 

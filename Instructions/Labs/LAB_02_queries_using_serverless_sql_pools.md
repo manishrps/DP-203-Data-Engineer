@@ -1,8 +1,8 @@
 # Module 2 - Run interactive queries using serverless SQL pools
 
-In this module, students will learn how to work with files stored in the data lake and external file sources, through T-SQL statements executed by a serverless SQL pool in Azure Synapse Analytics. Students will query Parquet files stored in a data lake, as well as CSV files stored in an external data store. Next, they will create Azure Active Directory security groups and enforce access to files in the data lake through Role-Based Access Control (RBAC) and Access Control Lists (ACLs).
+In this module, you will learn how to work with files stored in the data lake and external file sources, through T-SQL statements executed by a serverless SQL pool in Azure Synapse Analytics. You will query Parquet files stored in a data lake, as well as CSV files stored in an external data store. Next, you will create Azure Active Directory security groups and enforce access to files in the data lake through Role-Based Access Control (RBAC) and Access Control Lists (ACLs).
 
-In this module, the student will be able to:
+After completing this module, you will be able to:
 
 - Query Parquet data with serverless SQL pools
 - Create external tables for Parquet and CSV files
@@ -20,7 +20,7 @@ In this module, the student will be able to:
     - [Task 2: Create an external table for 2019 sales data](#task-2-create-an-external-table-for-2019-sales-data)
     - [Task 3: Create an external table for CSV files](#task-3-create-an-external-table-for-csv-files)
     - [Task 4: Create a view with a serverless SQL pool](#task-4-create-a-view-with-a-serverless-sql-pool)
-  - [Exercise 2: Securing access to data through using a serverless SQL pool in Azure Synapse Analytics](#exercise-2-securing-access-to-data-through-using-a-serverless-sql-pool-in-azure-synapse-analytics)
+  - [Exercise 2: Securing access to data using a serverless SQL pool in Azure Synapse Analytics](#exercise-2-securing-access-to-data-through-using-a-serverless-sql-pool-in-azure-synapse-analytics)
     - [Task 1: Create Azure Active Directory security groups](#task-1-create-azure-active-directory-security-groups)
     - [Task 2: Add group members](#task-2-add-group-members)
     - [Task 3: Configure data lake security - Role-Based Access Control (RBAC)](#task-3-configure-data-lake-security---role-based-access-control-rbac)
@@ -31,7 +31,7 @@ Tailwind Trader's Data Engineers want a way to explore the data lake, transform 
 
 ## Lab setup and pre-requisites
 
-- You have successfully completed [setup](./LAB_00_lab_setup_instructions.md) to create your lab environment.
+- You have successfully completed the setup steps to create your lab environment.
 - You must have permissions to create new Azure Active Directory security groups and assign members to them.
 
 ## Exercise 1: Querying a Data Lake Store using serverless SQL pools in Azure Synapse Analytics
@@ -301,7 +301,7 @@ Let's create a view to wrap a SQL query. Views allow you to reuse queries and ar
     - **3) External file formats**: `QuotedCsvWithHeader` and `SynapseParquetFormat`.
     - **4) Views**: `CustomerInfo`. 
 
-## Exercise 2: Securing access to data through using a serverless SQL pool in Azure Synapse Analytics
+## Exercise 2: Securing access to data using a serverless SQL pool in Azure Synapse Analytics
 
 Tailwind Traders wants to enforce that any kind of modifications to sales data can happen in the current year only, while allowing all authorized users to query the entirety of data. They have a small group of admins who can modify historic data if needed.
 

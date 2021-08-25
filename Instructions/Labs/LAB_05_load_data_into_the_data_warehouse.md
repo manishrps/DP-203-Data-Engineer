@@ -1,8 +1,8 @@
 # Module 5 - Ingest and load data into the Data Warehouse
 
-This module teaches students how to ingest data into the data warehouse through T-SQL scripts and Synapse Analytics integration pipelines. The student will learn how to load data into Synapse dedicated SQL pools with PolyBase and COPY using T-SQL. The student will also learn how to use workload management along with a Copy activity in a Azure Synapse pipeline for petabyte-scale data ingestion.
+This module teaches you how to ingest data into the data warehouse through T-SQL scripts and Synapse Analytics integration pipelines. You will learn how to load data into Synapse dedicated SQL pools with PolyBase and COPY using T-SQL. You will also learn how to use workload management along with a Copy activity in a Azure Synapse pipeline for petabyte-scale data ingestion.
 
-In this module, the student will be able to:
+After completing this module, you will be able to:
 
 - Perform petabyte-scale ingestion with Azure Synapse Pipelines
 - Import data with PolyBase and COPY using T-SQL
@@ -28,11 +28,11 @@ In this module, the student will be able to:
 
 ## Lab setup and pre-requisites
 
-- You have successfully completed [Module 0](../00/README.md) to create your lab environment.
+- Before starting this lab, you must complete **Lab 4: *Explore, transform, and load data into the Data Warehouse using Apache Spark***.
 
 ## Exercise 0: Start the dedicated SQL pool
 
-This lab uses the dedicated SQL pool. As a first step, make sure it is not paused. If so, start it by following these instructions:
+This lab uses the dedicated SQL pool you created in the previous lab. As a first step, make sure it is not paused. If so, start it by following these instructions:
 
 1. Open Synapse Studio (<https://web.azuresynapse.net/>).
 
@@ -490,7 +490,7 @@ To run loads with appropriate compute resources, create loading users designated
 
     ![The Parquet format is highlighted.](images/new-dataset-adlsgen2-parquet.png "Select format")
 
-9. In the properties, set the name to **asal400_december_sales (1)** and select the **asadatalakeNNNNNN** linked service **(2)**. Browse to the **`wwi-02/campaign-analytics/sale-20161230-snappy.parquet`** file location **(3)**, select **From sample file (4)** for schema import. Browse to `C:\dp203\data-engineering-ilt-deployment\Allfiles\samplefiles\sale-small-20100102-snappy.parquet` on your computer, then browse to it in the **Select file** field **(5)**. Select **OK (6)**.
+9. In the properties, set the name to **asal400_december_sales (1)** and select the **asadatalakeNNNNNN** linked service **(2)**. Browse to the **`wwi-02/campaign-analytics/sale-20161230-snappy.parquet`** file location **(3)**, select **From sample file (4)** for schema import. Browse to `C:\dp-203\data-engineering-ilt-deployment\Allfiles\samplefiles\sale-small-20100102-snappy.parquet` on your computer, then browse to it in the **Select file** field **(5)**. Select **OK (6)**.
 
     ![The properties are displayed.](images/pipeline-copy-sales-source-dataset.png "Dataset properties")
 
