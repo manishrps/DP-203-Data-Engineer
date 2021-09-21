@@ -8,6 +8,10 @@
 
    ![LabEnvironment](images/envdetails-env1.png)
 
+1. You can also open the Lab Guide on a separate full window by selecting the **Split Window** button on the bottom right corner.
+
+   ![LabEnvironment](images/split-window.png)
+
 ### Log-in to the Azure portal and verify the pre-deployed resources
 
 1. In the LabVM, double click on the **Azure portal** shortcut on the desktop.
