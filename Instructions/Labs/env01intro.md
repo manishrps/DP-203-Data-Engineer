@@ -61,19 +61,18 @@
 
 1. Click on **Next** from the bottom right corner and follow the instructions to perform the lab.
 
->**Note**: Please follow these steps before performing **lab 11**.
+>**Note!**: Please perform these steps before performing **lab 11**.
 
    In the left-hand navigation menu of your Databricks workspace, select Compute, then select your cluster in the list. If it's not running, start it now.
    ![Compute](images/Dp203module11.1.png) 
    
-
    Select the Libraries tab (1), then select Install New (2). In the Install Library dialog, select Maven under Library Source (3). Under Coordinates, paste       com.microsoft.azure:azure-eventhubs-spark_2.12:2.3.15 (4), then select Install.
 
    ![Compute](images/Dp203module11.2.png) 
 
   Wait until the library successfully installs before continuing
   
-   ![Compute](images/Dp203module11.3.png) 
+   ![Compute](https://raw.githubusercontent.com/CloudLabs-MOC/DP-203-Data-Engineer/intro/Instructions/Labs/DP203module11.3.png) 
 
 
 
