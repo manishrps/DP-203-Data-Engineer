@@ -29,7 +29,7 @@ In this exercise, you will use an Azure Databricks workspace and perform Structu
 3. In the left-hand menu of your Databricks workspace, select **Compute**.
 4. Select **+Create Cluster** to add a new cluster.
 
-    ![The create cluster page](images/create-a-cluster.png)
+    ![The create cluster page](images/create-a-clusteru.png)
 
 5. Enter a name for your cluster, such as `Test Cluster`.
 6. Select a **Single Node** cluster mode.
