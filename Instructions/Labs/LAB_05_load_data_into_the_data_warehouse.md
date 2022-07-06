@@ -1,56 +1,30 @@
-# Module 5 - Ingest and load data into the Data Warehouse
+# Lab 5 - Ingest and load data into the Data Warehouse
 
-This module teaches you how to ingest data into the data warehouse through T-SQL scripts and Synapse Analytics integration pipelines. You will learn how to load data into Synapse dedicated SQL pools with PolyBase and COPY using T-SQL. You will also learn how to use workload management along with a Copy activity in a Azure Synapse pipeline for petabyte-scale data ingestion.
+This lab teaches you how to ingest data into the data warehouse through T-SQL scripts and Synapse Analytics integration pipelines. You will learn how to load data into Synapse dedicated SQL pools with PolyBase and COPY using T-SQL. You will also learn how to use workload management along with a Copy activity in a Azure Synapse pipeline for petabyte-scale data ingestion.
 
-After completing this module, you will be able to:
+After completing this lab, you will be able to:
 
 - Perform petabyte-scale ingestion with Azure Synapse Pipelines
 - Import data with PolyBase and COPY using T-SQL
 - Use data loading best practices in Azure Synapse Analytics
 
-## Lab details
-
-- [Module 5 - Ingest and load data into the Data Warehouse](#module-5---ingest-and-load-data-into-the-data-warehouse)
-  - [Lab details](#lab-details)
-  - [Lab setup and pre-requisites](#lab-setup-and-pre-requisites)
-  - [Exercise 0: Start the dedicated SQL pool](#exercise-0-start-the-dedicated-sql-pool)
-  - [Exercise 1: Import data with PolyBase and COPY using T-SQL](#exercise-1-import-data-with-polybase-and-copy-using-t-sql)
-    - [Task 1: Create staging tables](#task-1-create-staging-tables)
-    - [Task 2: Configure and run PolyBase load operation](#task-2-configure-and-run-polybase-load-operation)
-    - [Task 3: Configure and run the COPY statement](#task-3-configure-and-run-the-copy-statement)
-    - [Task 4: Use COPY to load text file with non-standard row delimiters](#task-4-use-copy-to-load-text-file-with-non-standard-row-delimiters)
-    - [Task 5: Use PolyBase to load text file with non-standard row delimiters](#task-5-use-polybase-to-load-text-file-with-non-standard-row-delimiters)
-  - [Exercise 2: Petabyte-scale ingestion with Azure Synapse Pipelines](#exercise-2-petabyte-scale-ingestion-with-azure-synapse-pipelines)
-    - [Task 1: Configure workload management classification](#task-1-configure-workload-management-classification)
-    - [Task 2: Create pipeline with copy activity](#task-2-create-pipeline-with-copy-activity)
-  - [Exercise 3: Cleanup](#exercise-3-cleanup)
-    - [Task 1: Pause the dedicated SQL pool](#task-1-pause-the-dedicated-sql-pool)
-
 ## Lab setup and pre-requisites
 
-- Before starting this lab, you must complete **Lab 4: *Explore, transform, and load data into the Data Warehouse using Apache Spark***.
+Before starting this lab, you must complete **Lab 4: *Explore, transform, and load data into the Data Warehouse using Apache Spark***.
 
-## Exercise 0: Start the dedicated SQL pool
-
-This lab uses the dedicated SQL pool you created in the previous lab. As a first step, make sure it is not paused. If so, start it by following these instructions:
+This lab uses the dedicated SQL pool you created in the previous lab. You should have paused the SQL pool at the end of the previous lab, so resume it by following these instructions:
 
 1. Open Synapse Studio (<https://web.azuresynapse.net/>).
-
 2. Select the **Manage** hub.
-
-    ![The manage hub is highlighted.](images/manage-hub.png "Manage hub")
-
-3. Select **SQL pools** in the left-hand menu **(1)**. If the dedicated SQL pool is paused, hover over the name of the pool and select **Resume (2)**.
+3. Select **SQL pools** in the left-hand menu. If the **SQLPool01** dedicated SQL pool is paused, hover over its name and select **&#9655;**.
 
     ![The resume button is highlighted on the dedicated SQL pool.](images/resume-dedicated-sql-pool.png "Resume")
 
 4. When prompted, select **Resume**. It will take a minute or two to resume the pool.
 
-    ![The resume button is highlighted.](images/resume-dedicated-sql-pool-confirm.png "Resume")
+> **Important:** Once started, a dedicated SQL pool consumes credits in your Azure subscription until it is paused. If you take a break from this lab, or decide not to complete it; follow the instructions at the end of the lab to pause your SQL pool!
 
-    > **Continue to the next exercise** while the dedicated SQL pool resumes.
-
-## Exercise 1: Import data with PolyBase and COPY using T-SQL
+## Exercise 1 - Import data with PolyBase and COPY using T-SQL
 
 There are different options for loading large amounts and varying types of data into Azure Synapse Analytics, such as through T-SQL commands using a Synapse SQL Pool, and with Azure Synapse pipelines. In our scenario, Wide World Importers stores most of their raw data in a data lake and in different formats. Among the data loading options available to them, WWI's data engineers are most comfortable using T-SQL.
 
@@ -58,7 +32,7 @@ However, even with their familiarity with SQL, there are some things to consider
 
 | PolyBase | COPY |
 | --- | --- |
-| Needs `CONTROL` permission | Relaxed permission |
+| Needs CONTROL permission | Relaxed permission |
 | Has row width limits | No row width limit |
 | No delimiters within text | Supports delimiters in text |
 | Fixed line delimiter | Supports custom column and row delimiters |
@@ -70,34 +44,35 @@ In this exercise, you will help WWI compare ease of setup, flexibility, and spee
 
 ### Task 1: Create staging tables
 
-The `Sale` table has a columnstore index to optimize for read-heavy workloads. It is also used heavily for reporting and ad-hoc queries. To achieve the fastest loading speed and minimize the impact of heavy data inserts on the `Sale` table, WWI has decided to create a staging table for loads.
+The **Sale** table has a columnstore index to optimize for read-heavy workloads. It is also used heavily for reporting and ad-hoc queries. To achieve the fastest loading speed and minimize the impact of heavy data inserts on the **Sale** table, WWI has decided to create a staging table for loads.
 
-In this task, you will create a new staging table named `SaleHeap` in a new schema named `wwi_staging`. You will define it as a [heap](https://docs.microsoft.com/sql/relational-databases/indexes/heaps-tables-without-clustered-indexes?view=sql-server-ver15) and use round-robin distribution. When WWI finalizes their data loading pipeline, they will load the data into `SaleHeap`, then insert from the heap table into `Sale`. Although this is a two-step process, the second step of inserting the rows to the production table does not incur data movement across the distributions.
+In this task, you will create a new staging table named **SaleHeap** in a new schema named **wwi_staging**. You will define it as a [heap](https://docs.microsoft.com/sql/relational-databases/indexes/heaps-tables-without-clustered-indexes?view=sql-server-ver15) and use round-robin distribution. When WWI finalizes their data loading pipeline, they will load the data into **SaleHeap**, then insert from the heap table into **Sale**. Although this is a two-step process, the second step of inserting the rows to the production table does not incur data movement across the distributions.
 
-You will also create a new `Sale` clustered columnstore table within the `wwi_staging` to compare data load speeds.
+You will also create a new **Sale** clustered columnstore table within the **wwi_staging** schema to compare data load speeds.
 
-1. Open Synapse Analytics Studio (<https://web.azuresynapse.net/>), and then navigate to the **Develop** hub.
+1. In Synapse Analytics Studio, navigate to the **Develop** hub.
 
     ![The Develop menu item is highlighted.](images/develop-hub.png "Develop hub")
 
-2. From the **Develop** menu, select the + button and choose **SQL Script** from the context menu.
+2. In the **+** menu, select **SQL script**.
 
     ![The SQL script context menu item is highlighted.](images/synapse-studio-new-sql-script.png "New SQL script")
 
-3. In the toolbar menu, connect to the **SQLPool01** database to execute the query.
+3. In the toolbar menu, connect to the **SQLPool01** database.
 
     ![The connect to option is highlighted in the query toolbar.](images/synapse-studio-query-toolbar-connect.png "Query toolbar")
 
-4. In the query window, replace the script with the following to create the `wwi_staging` schema:
+4. In the query window, enter the following code to verify that the **wwi_staging** schema exists.
 
     ```sql
-    CREATE SCHEMA [wwi_staging]
+    SELECT * FROM sys.schemas WHERE name = 'wwi_staging'
     ```
-5. Select **Run** from the toolbar menu to execute the SQL command.
+
+5. Select **Run** from the toolbar menu to run the script.
 
     ![The run button is highlighted in the query toolbar.](images/synapse-studio-query-toolbar-run.png "Run")
 
-    > **Note:** If you receive the following error, continue to the next step: `Failed to execute query. Error: There is already an object named 'wwi_staging' in the database. CREATE SCHEMA failed due to previous errors.`
+    The results should include a single row for the **wwi_staging** schema, which was created when setting up the previous lab.
 
 6. In the query window, replace the script with the following to create the heap table:
 
@@ -123,9 +98,9 @@ You will also create a new `Sale` clustered columnstore table within the `wwi_st
     )
     ```
 
-7. Select **Run** from the toolbar menu to execute the SQL command.
+7. Run the SQL script to create the table.
 
-8. In the query window, replace the script with the following to create the `Sale` table in the `wwi_staging` schema for load comparisons:
+8. In the query window, replace the script with the following to create the **Sale** table in the **wwi_staging** schema for load comparisons:
 
     ```sql
     CREATE TABLE [wwi_staging].[Sale]
@@ -153,17 +128,17 @@ You will also create a new `Sale` clustered columnstore table within the `wwi_st
     )
     ```
 
-9. Select **Run** from the toolbar menu to execute the SQL command.
+9. Run the script to ceate the table.
 
 ### Task 2: Configure and run PolyBase load operation
 
 PolyBase requires the following elements:
 
-- An external data source that points to the `abfss` path in ADLS Gen2 where the Parquet files are located
+- An external data source that points to the **abfss** path in ADLS Gen2 where the Parquet files are located
 - An external file format for Parquet files
 - An external table that defines the schema for the files, as well as the location, data source, and file format
 
-1. In the query window, replace the script with the following to create the external data source. Be sure to replace `SUFFIX` with the lab workspace id:
+1. In the query window, replace the script with the following code to create the external data source. Be sure to replace ***SUFFIX*** with the unique suffix for your Azure resources in this lab:
 
     ```sql
     -- Replace SUFFIX with the lab workspace id.
@@ -174,13 +149,13 @@ PolyBase requires the following elements:
     );
     ```
 
-    You can find the lab workspace id at the end of the Synapse Analytics workspace name, as well as your user name:
+    You can find your suffix at the end of the Synapse Analytics workspace name:
 
     ![The suffix is highlighted.](images/data-lake-suffix.png "Data lake suffix")
 
-2. Select **Run** from the toolbar menu to execute the SQL command.
+2. Run the script to create the external data source.
 
-3. In the query window, replace the script with the following to create the external file format and external data table. Notice that we defined `TransactionId` as an `nvarchar(36)` field instead of `uniqueidentifier`. This is because external tables do not currently support `uniqueidentifier` columns:
+3. In the query window, replace the script with the following code to create the external file format and external data table. Notice that we defined **TransactionId** as an **nvarchar(36)** field instead of **uniqueidentifier**. This is because external tables do not currently support **uniqueidentifier** columns:
 
     ```sql
     CREATE EXTERNAL FILE FORMAT [ParquetFormat]
@@ -216,11 +191,11 @@ PolyBase requires the following elements:
     GO
     ```
 
-    > **Note:** The `/sale-small/Year=2019/` folder's Parquet files contain **4,124,857 rows**.
+    > **Note:** The */sale-small/Year=2019/* folder's Parquet files contain **4,124,857 rows**.
 
-4. Select **Run** from the toolbar menu to execute the SQL command.
+4. Run the script.
 
-5. In the query window, replace the script with the following to load the data into the `wwi_staging.SalesHeap` table:
+5. In the query window, replace the script with the following code to load the data into the **wwi_staging.SalesHeap** table:
 
     ```sql
     INSERT INTO [wwi_staging].[SaleHeap]
@@ -228,20 +203,21 @@ PolyBase requires the following elements:
     FROM [wwi_external].[Sales]
     ```
 
-6. In the query window, replace the script with the following to see how many rows were imported:
+6. Run the script. It may take some time to complete.
+
+7. In the query window, replace the script with the following to see how many rows were imported:
 
     ```sql
     SELECT COUNT(1) FROM wwi_staging.SaleHeap(nolock)
     ```
 
-
-7. Select **Run** from the toolbar menu to execute the SQL command. You should see a result of `4124857`.
+8. Run the script. You should see a result of 4124857.
 
 ### Task 3: Configure and run the COPY statement
 
 Now let's see how to perform the same load operation with the COPY statement.
 
-1. In the query window, replace the script with the following to truncate the heap table and load data using the COPY statement. As you did before, be sure to replace `SUFFIX` with the lab workspace id:
+1. In the query window, replace the script with the following to truncate the heap table and load data using the COPY statement. As you did before, be sure to replace ***SUFFIX*** with your unique suffix:
 
     ```sql
     TRUNCATE TABLE wwi_staging.SaleHeap;
@@ -257,7 +233,7 @@ Now let's see how to perform the same load operation with the COPY statement.
     GO
     ```
 
-2. Select **Run** from the toolbar menu to execute the SQL command. Notice how little scripting is required to perform a similar load operation.
+2. Run the script. Notice how little scripting is required to perform a similar load operation.
 
 3. In the query window, replace the script with the following to see how many rows were imported:
 
@@ -265,23 +241,21 @@ Now let's see how to perform the same load operation with the COPY statement.
     SELECT COUNT(1) FROM wwi_staging.SaleHeap(nolock)
     ```
 
-4. Select **Run** from the toolbar menu to execute the SQL command. You should see a result of `4124857`.
-
-Do the number of rows match for both load operations? Which activity was fastest? You should see that both copied the same amount of data in roughly the same amount of time.
+4. Run the script. Once again, 4124857 rows should have been imported. Note that both load operations copied the same amount of data in roughly the same amount of time.
 
 ### Task 4: Use COPY to load text file with non-standard row delimiters
 
 One of the advantages COPY has over PolyBase is that it supports custom column and row delimiters.
 
-WWI has a nightly process that ingests regional sales data from a partner analytics system and saves the files in the data lake. The text files use non-standard column and row delimiters where columns are delimited by a `.` and rows by a `,`:
+WWI has a nightly process that ingests regional sales data from a partner analytics system and saves the files in the data lake. The text files use non-standard column and row delimiters where columns are delimited by a period and rows by a comma:
 
-```text
+```
 20200421.114892.130282.159488.172105.196533,20200420.109934.108377.122039.101946.100712,20200419.253714.357583.452690.553447.653921
 ```
 
-The data has the following fields: `Date`, `NorthAmerica`, `SouthAmerica`, `Europe`, `Africa`, and `Asia`. They must process this data and store it in Synapse Analytics.
+The data has the following fields: **Date**, **NorthAmerica**, **SouthAmerica**, **Europe**, **Africa**, and **Asia**. They must process this data and store it in Synapse Analytics.
 
-1. In the query window, replace the script with the following to create the `DailySalesCounts` table and load data using the COPY statement. As before, be sure to replace `SUFFIX` with the id for your workspace:
+1. In the query window, replace the script with the following to create the **DailySalesCounts** table and load data using the COPY statement. As before, be sure to replace ***SUFFIX*** with your unique suffix:
 
     ```sql
     CREATE TABLE [wwi_staging].DailySalesCounts
@@ -306,9 +280,9 @@ The data has the following fields: `Date`, `NorthAmerica`, `SouthAmerica`, `Euro
     GO
     ```
 
-    Notice the `FIELDTERMINATOR` and `ROWTERMINATOR` properties that help us correctly parse the file.
+    Notice the FIELDTERMINATOR` and ROWTERMINATOR properties that enable the code to correctly parse the file.
 
-2. Select **Run** from the toolbar menu to execute the SQL command.
+2. Run the script.
 
 3. In the query window, replace the script with the following to view the imported data:
 
@@ -317,9 +291,9 @@ The data has the following fields: `Date`, `NorthAmerica`, `SouthAmerica`, `Euro
     ORDER BY [Date] DESC
     ```
 
-4. Select **Run** from the toolbar menu to execute the SQL command.
+4. Run the script and view the results.
 
-5. Try viewing the results in a Chart and set the **Category column** to `Date`:
+5. Try viewing the results in a Chart and set the **Category column** to **Date**:
 
     ![The results are displayed in a chart.](images/daily-sales-counts-chart.png "DailySalesCounts chart")
 
@@ -362,17 +336,19 @@ Let's try this same operation using PolyBase.
     FROM [wwi_external].[DailySalesCounts]
     ```
 
-2. Select **Run** from the toolbar menu to execute the SQL command.
+2. Run the script. You should see an error similar to:
 
-    You should see an error similar to: `Failed to execute query. Error: HdfsBridge::recordReaderFillBuffer - Unexpected error encountered filling record reader buffer: HadoopExecutionException: Too many columns in the line.`.
+    *Failed to execute query. Error: HdfsBridge::recordReaderFillBuffer - Unexpected error encountered filling record reader buffer: HadoopExecutionException: Too many columns in the line.*.
 
     Why is this? According to [PolyBase documentation](https://docs.microsoft.com/sql/t-sql/statements/create-external-file-format-transact-sql?view=sql-server-ver15#limitations-and-restrictions):
 
-    > The row delimiter in delimited-text files must be supported by Hadoop's LineRecordReader. That is, it must be either `\r`, `\n`, or `\r\n`. These delimiters are not user-configurable.
+    > The row delimiter in delimited-text files must be supported by Hadoop's LineRecordReader. That is, it must be either **\r**, **\n**, or **\r\n**. These delimiters are not user-configurable.
 
     This is an example of where COPY's flexibility gives it an advantage over PolyBase.
 
-## Exercise 2: Petabyte-scale ingestion with Azure Synapse Pipelines
+3. Keep the script open for the next exercise.
+
+## Exercise 2 - Petabyte-scale ingestion with Azure Synapse Pipelines
 
 Tailwind Traders needs to ingest large volumes of sales data into the data warehouse. They want a repeatable process that can efficiently load the data. When the data loads, they want to prioritize the data movement jobs so they take priority.
 
@@ -380,7 +356,7 @@ You have decided to create a proof of concept data pipeline to import a large Pa
 
 There is often a level of orchestration involved when moving data into a data warehouse, coordinating movement from one or more data sources and sometimes some level of transformation. The transformation step can occur during (extract-transform-load - ETL) or after (extract-load-transform - ELT) data movement. Any modern data platform must provide a seamless experience for all the typical data wrangling actions like extractions, parsing, joining, standardizing, augmenting, cleansing, consolidating, and filtering. Azure Synapse Analytics provides two significant categories of features - data flows and data orchestrations (implemented as pipelines).
 
-> In this segment of the lab, we will focus on the orchestration aspect. The next segment will focus more on the transformation (data flow) pipelines.
+> In this exercise, we will focus on the orchestration aspect. A later lab will focus more on the transformation (data flow) pipelines.
 
 ### Task 1: Configure workload management classification
 
@@ -390,71 +366,61 @@ Be sure that you allocate enough memory to the pipeline session. To do this, inc
 
 To run loads with appropriate compute resources, create loading users designated for running loads. Assign each loading user to a specific resource class or workload group. To run a load, sign in as one of the loading users, and then run the load. The load runs with the user's resource class.
 
-1. Open Synapse Studio (<https://web.azuresynapse.net/>), and then navigate to the **Develop** hub.
-
-    ![The Develop menu item is highlighted.](images/develop-hub.png "Develop hub")
-
-2. From the **Develop** menu, select the **+** button **(1)** and choose **SQL Script** from the context menu **(2)**.
-
-    ![The SQL script context menu item is highlighted.](images/synapse-studio-new-sql-script.png "New SQL script")
-
-3. In the toolbar menu, connect to the **SQLPool01** database to execute the query.
-
-    ![The connect to option is highlighted in the query toolbar.](images/synapse-studio-query-toolbar-connect.png "Query toolbar")
-
-4. In the query window, replace the script with the following to create a workload group, `BigDataLoad`, that uses workload isolation by reserving a minimum of 50% resources with a cap of 100%:
+1. In the SQL script query window you worked with in the previous exercise, replace the script with the following to create:
+    - A workload group, **BigDataLoad**, that uses workload isolation by reserving a minimum of 50% resources with a cap of 100%
+    - A new workload classifier, **HeavyLoader** that assigns the **asa.sql.import01** user to the **BigDataLoad** workload group.
+    
+    At the end, we select from **sys.workload_management_workload_classifiers** to view all classifiers, including the one we just created:
 
     ```sql
-    IF NOT EXISTS (SELECT * FROM sys.workload_management_workload_classifiers WHERE group_name = 'BigDataLoad')
+    -- Drop objects if they exist
+    IF EXISTS (SELECT * FROM sys.workload_management_workload_classifiers WHERE [name] = 'HeavyLoader')
     BEGIN
-        CREATE WORKLOAD GROUP BigDataLoad WITH  
-        (
-            MIN_PERCENTAGE_RESOURCE = 50 -- integer value
-            ,REQUEST_MIN_RESOURCE_GRANT_PERCENT = 25 --  (guaranteed a minimum of 4 concurrency)
-            ,CAP_PERCENTAGE_RESOURCE = 100
-        );
-    END
-    ```
-
-5. Select **Run** from the toolbar menu to execute the SQL command.
-
-6. In the query window, replace the script with the following to create a new workload classifier, `HeavyLoader` that assigns the `asa.sql.import01` user we created in your environment to the `BigDataLoad` workload group. At the end, we select from `sys.workload_management_workload_classifiers` to view all classifiers, including the one we just created:
-
-    ```sql
-    IF NOT EXISTS (SELECT * FROM sys.workload_management_workload_classifiers WHERE [name] = 'HeavyLoader')
+        DROP WORKLOAD CLASSIFIER HeavyLoader
+    END;
+    
+    IF EXISTS (SELECT * FROM sys.workload_management_workload_groups WHERE name = 'BigDataLoad')
     BEGIN
-        CREATE WORKLOAD Classifier HeavyLoader WITH
-        (
-            Workload_Group ='BigDataLoad',
-            MemberName='asa.sql.import01',
-            IMPORTANCE = HIGH
-        );
-    END
-
+        DROP WORKLOAD GROUP BigDataLoad
+    END;
+    
+    --Create workload group
+    CREATE WORKLOAD GROUP BigDataLoad WITH
+      (
+          MIN_PERCENTAGE_RESOURCE = 50, -- integer value
+          REQUEST_MIN_RESOURCE_GRANT_PERCENT = 25, --  (guaranteed min 4 concurrency)
+          CAP_PERCENTAGE_RESOURCE = 100
+      );
+    
+    -- Create workload classifier
+    CREATE WORKLOAD Classifier HeavyLoader WITH
+    (
+        Workload_Group ='BigDataLoad',
+        MemberName='asa.sql.import01',
+        IMPORTANCE = HIGH
+    );
+    
+    -- View classifiers
     SELECT * FROM sys.workload_management_workload_classifiers
     ```
 
-7. Select **Run** from the toolbar menu to execute the SQL command. You should see the new classifier in the query results:
+2. Run the script, and if necessary, switch the results to **Table** view. You should see the new **HeavyLoader** classifier in the query results:
 
     ![The new workload classifier is highlighted.](images/workload-classifiers-query-results.png "Workload Classifiers query results")
 
-8. Navigate to the **Manage** hub.
+3. Navigate to the **Manage** hub.
 
     ![The Manage menu item is highlighted.](images/manage-hub.png "Manage hub")
 
-9. Select **Linked services** in the left-hand menu **(1)**, then select a linked service named **`sqlpool01_import01` (2)**.
+4. Select **Linked services** in the left-hand menu, then select the **sqlpool01_import01** linked service (if this is not listed, use the **&#8635;** button at the top right to refresh the view).
 
     ![Linked services is displayed.](images/linked-services.png "Linked services")
 
-    > **Note:** If you do not see this or the other Synapse linked services, select **Refresh** at the top-right corner of Synapse Studio. If you recently ran the PowerShell script that creates these linked services, then they might not show up until you refresh.
-
-    ![The refresh button is highlighted.](images/refresh-synapse-studio.png "Refresh")
-
-10. Notice that the user name for the dedicated SQL pool connection is the **`asa.sql.import01` user** we added to the `HeavyLoader` classifier. We will use this linked service in our new pipeline to reserve resources for the data load activity.
+5. Notice that the user name for the dedicated SQL pool connection is the **asa.sql.import01** user you added to the **HeavyLoader** classifier. We will use this linked service in our new pipeline to reserve resources for the data load activity.
 
     ![The user name is highlighted.](images/sqlpool01-import01-linked-service.png "Linked service")
 
-11. Select **Cancel** to close the dialog, and select **Discard changes** when prompted.
+6. Select **Cancel** to close the dialog, and select **Discard changes** if prompted.
 
 ### Task 2: Create pipeline with copy activity
 
@@ -462,63 +428,79 @@ To run loads with appropriate compute resources, create loading users designated
 
     ![The Integrate hub is highlighted.](images/integrate-hub.png "Integrate hub")
 
-2. Select **+ (1)** then **Pipeline (2)** to create a new pipeline.
+2. In the **+** menu, select **Pipeline** to create a new pipeline.
 
     ![The new pipeline context menu item is selected.](images/new-pipeline.png "New pipeline")
 
-3. In the **Properties** pane for the new pipeline, enter the following **Name**: **`Copy December Sales`**.
+3. In the **Properties** pane for the new pipeline, set the **Name** of the pipeline to **`Copy December Sales`**.
 
     ![The Name property is highlighted.](images/pipeline-copy-sales-name.png "Properties")
+
+    > **Tip**: After setting the name, hide the **Properties** pane.
 
 4. Expand **Move & transform** within the Activities list, then drag the **Copy data** activity onto the pipeline canvas.
 
     ![Copy data is dragged to the canvas](images/pipeline-copy-sales-drag-copy-data.png "Pipeline canvas")
 
-5. Select the **Copy data** activity on the canvas, select the **General** tab **(1)**, and set the **Name** to **`Copy Sales` (2)**.
+5. Select the **Copy data** activity on the canvas. Then, beneath the canvas, on the **General** tab, set the **Name** of the activity to **`Copy Sales`**.
 
     ![The name is highlighted in the general tab.](images/pipeline-copy-sales-general.png "General tab")
 
-6. Select the **Source** tab **(1)**, then select **+ New (2)** next to `Source dataset`.
+6. Select the **Source** tab, then select **+ New** to create a new source dataset.
 
     ![The new button is highlighted.](images/pipeline-copy-sales-source-new.png "Source tab")
 
-7. Select the **Azure Data Lake Storage Gen2** data store **(1)**, then select **Continue (2)**.
+7. Select the **Azure Data Lake Storage Gen2** data store, then select **Continue**.
 
     ![ADLS Gen2 is selected.](images/new-dataset-adlsgen2.png "New dataset")
 
-8. Choose the **Parquet** format **(1)**, then select **Continue (2)**.
+8. Choose the **Parquet** format, then select **Continue**.
 
     ![The Parquet format is highlighted.](images/new-dataset-adlsgen2-parquet.png "Select format")
 
-9. In the properties, set the name to **asal400_december_sales (1)** and select the **asadatalakeNNNNNN** linked service **(2)**. Browse to the **`wwi-02/campaign-analytics/sale-20161230-snappy.parquet`** file location **(3)**, select **From sample file (4)** for schema import. Browse to `C:\dp-203\data-engineering-ilt-deployment\Allfiles\samplefiles\sale-small-20100102-snappy.parquet` on your computer, then browse to it in the **Select file** field **(5)**. Select **OK (6)**.
+9. In the **Set properties** pane:
+    1. Set the name to **`asal400_december_sales`**.
+    2. Select the **asadatalake*xxxxxxx*** linked service.
+    3. Browse to the **wwi-02/campaign-analytics/sale-20161230-snappy.parquet** file
+    4. Select **From sample file** for schema import.
+    5. Browse to **C:\dp-203\data-engineering-ilt-deployment\Allfiles\samplefiles\sale-small-20100102-snappy.parquet** in the **Select file** field.
+    6. Select **OK**.
 
     ![The properties are displayed.](images/pipeline-copy-sales-source-dataset.png "Dataset properties")
 
     We downloaded a sample Parquet file that has the exact same schema, but is much smaller. This is because the file we are copying is too large to automatically infer the schema in the copy activity source settings.
 
-10. Select the **Sink** tab **(1)**, then select **+ New (2)** next to `Sink dataset`.
+10. Select the **Sink** tab, then select **+ New** to create a new sink dataset.
 
     ![The new button is highlighted.](images/pipeline-copy-sales-sink-new.png "Sink tab")
 
-11. Select the **Azure Synapse Analytics** data store **(1)**, then select **Continue (2)**.
+11. Select the **Azure Synapse Analytics** data store, then select **Continue**.
 
     ![Azure Synapse Analytics is selected.](images/new-dataset-asa.png "New dataset")
 
-12. In the properties, set the name to **`asal400_saleheap_asa` (1)** and select the **sqlpool01_import01** linked service **(2)** that connects to Synapse Analytics with the `asa.sql.import01` user. For the table name, scroll the Table name dropdown and choose the **wwi_perf.Sale_Heap** table **(3)** then select **OK (4)**.
+12. In the **Set properties** pane:
+    1. Set the **Name** to **`asal400_saleheap_asa`**
+    2. Select the **sqlpool01_import01** linked service.
+    3. Select the **wwi_perf.Sale_Heap** table
+    4. Select **OK**.
 
     ![The properties are displayed.](images/pipeline-copy-sales-sink-dataset.png "Dataset properties")
 
-13. In the **Sink** tab, select the **Copy command (1)** copy method and enter the following in the pre-copy script to clear the table before import: **`TRUNCATE TABLE wwi_perf.Sale_Heap` (2)**.
+13. In the **Sink** tab, select the **Copy command** copy method and enter the following code in the pre-copy script to clear the table before import:
+
+    ```
+    TRUNCATE TABLE wwi_perf.Sale_Heap
+    ```
 
     ![The described settings are displayed.](images/pipeline-copy-sales-sink-settings.png "Sink")
 
-    The fastest and most scalable way to load data is through PolyBase or the COPY statement **(1)**, and the COPY statement provides the most flexibility for high-throughput data ingestion into the SQL pool.
+    The fastest and most scalable way to load data is through PolyBase or the COPY statement, and the COPY statement provides the most flexibility for high-throughput data ingestion into the SQL pool.
 
-14. Select the **Mapping** tab **(1)** and select **Import schemas (2)** to create mappings for each source and destination field. Select **`TransactionDate`** in the source column **(3)** to map it to the `TransactionDateId` destination column.
+14. Select the **Mapping** tab and select **Import schemas** to create mappings for each source and destination field. Select **TransactionDate** in the source column to map it to the **TransactionDateId** destination column.
 
     ![The mapping is displayed.](images/pipeline-copy-sales-sink-mapping.png "Mapping")
 
-15. Select the **Settings** tab **(1)** and set the **Data integration unit** to **`8` (2)**. This is required due to the large size of the source Parquet file.
+15. Select the **Settings** tab and set the **Data integration unit** to **8**. This is required due to the large size of the source Parquet file.
 
     ![The data integration unit value is set to 8.](images/pipeline-copy-sales-settings.png "Settings")
 
@@ -526,7 +508,7 @@ To run loads with appropriate compute resources, create loading users designated
 
     ![Publish all is highlighted.](images/publish-all-1.png "Publish all")
 
-17. Select **Add trigger (1)**, then **Trigger now (2)**. Select **OK** in the pipeline run trigger to begin.
+17. Select **Add trigger**, then **Trigger now**. Then select **OK** in the **Pipeline run** pane to start the pipeline.
 
     ![Trigger now.](images/copy-pipeline-trigger-now.png "Trigger now")
 
@@ -534,26 +516,17 @@ To run loads with appropriate compute resources, create loading users designated
 
     ![The Monitor hub menu item is selected.](images/monitor-hub.png "Monitor hub")
 
-19. Select **Pipeline Runs (1)**. You can see the status **(2)** of your pipeline run here. Note that you may need to refresh the view **(3)**. Once the pipeline run is complete, you can query the `wwi_perf.Sale_Heap` table to view the imported data.
+19. Select **Pipeline Runs**. You can see the status of your pipeline run here. Note that you may need to refresh the view. Once the pipeline run is complete, you can query the **wwi_perf.Sale_Heap** table to view the imported data.
 
     ![The completed pipeline run is displayed.](images/pipeline-copy-sales-pipeline-run.png "Pipeline runs")
 
-## Exercise 3: Cleanup
+## Important: Pause your SQL pool when the PowerShell script has completed running
 
 Complete these steps to free up resources you no longer need.
 
-### Task 1: Pause the dedicated SQL pool
-
-1. Open Synapse Studio (<https://web.azuresynapse.net/>).
-
-2. Select the **Manage** hub.
-
-    ![The manage hub is highlighted.](images/manage-hub.png "Manage hub")
-
-3. Select **SQL pools** in the left-hand menu **(1)**. Hover over the name of the dedicated SQL pool and select **Pause (2)**.
+1. In Synapse Studio, select the **Manage** hub.
+2. Select **SQL pools** in the left-hand menu. Hover over the **SQLPool01** dedicated SQL pool and select **||**.
 
     ![The pause button is highlighted on the dedicated SQL pool.](images/pause-dedicated-sql-pool.png "Pause")
 
-4. When prompted, select **Pause**.
-
-    ![The pause button is highlighted.](images/pause-dedicated-sql-pool-confirm.png "Pause")
+3. When prompted, select **Pause**.7. In Synapse Studio, select the **Manage** hub.

@@ -29,7 +29,7 @@ In this exercise, you will use an Azure Databricks workspace and perform Structu
 3. In the left-hand menu of your Databricks workspace, select **Compute**.
 4. Select **+Create Cluster** to add a new cluster.
 
-    ![The create cluster page](images/create-a-clusteru.png)
+    ![The create cluster page](images/create-a-cluster.png)
 
 5. Enter a name for your cluster, such as `Test Cluster`.
 6. Select a **Single Node** cluster mode.
@@ -65,50 +65,6 @@ In this exercise, you will use an Azure Databricks workspace and perform Structu
 
 1. After you've finished exploring the Azure Databricks notebook; in your Azure Databricks workspace, the left pane, select **Compute** and select your cluster. Then select **Terminate** to stop the cluster.
 
-### Task 2: Execute PowerShell script
-
-1. In the hosted VM environment provided for this course, open Powershell in administrator mode, and execute the following to set the execution policy to Unrestricted so you can run the local PowerShell script file:
-
-    ```
-    Set-ExecutionPolicy Unrestricted
-    ```
-
-    > **Note**: If you receive a prompt that you are installing the module from an untrusted repository, select **Yes to All** to proceed with the setup.
-
-2. Change directories to the root of this repo within your local file system.
-
-    ```
-    cd C:\dp-203\data-engineering-ilt-deployment\Allfiles\00\artifacts\environment-setup\automation\
-    ```
-
-3. Enter the following command to run a PowerShell script that creates objects in the SQL pool:
-
-    ```
-    .\dp-203-setup-Part02.ps1
-    ```
-
-4. When the script is completed run the following command in the PowerShell window:
-   
-   ```
-   exit
-   ```
-
-    **NOTE**: This script should run in roughly 10-15 minutes and loads data into Synapse.
->
-> If it seems as though the script hangs while creating linked services for the SQLPool01 dedicated SQL pool (there are 3), press **Enter**. This tends to refresh the PowerShell script and allows it to continue to the end.
->
-> ### Potential errors that you can ignore
->
-> You may encounter a few errors and warnings during the script execution. The errors below can safely be ignored:
->
-> 1. The following error may occur when creating SQL users and adding role assignments in the dedicated SQL pool, and can safely be ignored:
->
->       *Principal 'xxx@xxx.com' could not be created. Only connections established with Active Directory accounts can create other Active Directory users.*
->
->2. The following error may also occur and can safely be ignored:
->
->       *07-create-wwi-perf-sale-heap with label CTAS : Sale_Heap. Cannot index into a null array.*
-> 
 ## Exercise 2 - Working with Apache Spark in Synapse Analytics
 
 This exercise demonstrates the experience of working with Apache Spark in Azure Synapse Analytics. You will also learn how to use libraries like Hyperspace and MSSparkUtil to optimize the experience of working with Data Lake storage accounts from Spark notebooks.
@@ -123,7 +79,7 @@ Hyperspace lets you create indexes on records scanned from persisted data files.
 
 Also, Hyperspace allows users to compare their original plan versus the updated index-dependent plan before running their query.
 
-1. Open Synapse Studio at `https://web.azuresynapse.net`, and if prompted, select your Azure Active Directory tenant, subscription, and Azure Synapse Analytics workspace. If prompted with "We use optional cookies to provide a better experience." then select Accept.
+1. Open Synapse Studio at `https://web.azuresynapse.net`, and if prompted, select your Azure Active Directory tenant, subscription, and Azure Synapse Analytics workspace. If prompted with "We use optional cookies to provide a better experience." then select **Continue**.
 
 2. Select the **Develop** hub.
 
@@ -303,7 +259,7 @@ for file in files:
 
 ### Task 3 Stop the session
 
-1. At the top right of the notebook, use the **Stop Session** button to stop the notebook session.
+1. At the top right of the notebook, use the **Stop Session** button and then select **Stop now** to stop the notebook session.
 1. Publish the notebook if you want to review it again later. Then close it.
 
 ## Resources
