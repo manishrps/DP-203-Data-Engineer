@@ -545,6 +545,8 @@ To do this, you will build a mapping data flow that performs the following tasks
     - **Wildcard paths**: Enter `online-user-profiles-02/*.json`
     - **JSON Settings:** Select **Array of documents** for **Document form**.
 
+    ![The source settings are configured as described.](images/lab6-ex2-task1-step7.png "JSON Settings")
+
 8. Select the **+** to the right of the **EcommerceUserProfiles** source, then select the **Derived Column** schema modifier.
 
     ![The plus sign and Derived Column schema modifier are highlighted.](images/data-flow-user-profiles-new-derived-column.png "New Derived Column")
