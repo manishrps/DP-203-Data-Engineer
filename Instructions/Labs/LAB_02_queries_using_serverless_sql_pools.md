@@ -95,11 +95,11 @@ Rather than creating a script with OPENROWSET and a path to the root 2019 folder
     - **3)** The CREATE EXTERNAL TABLE WITH statement specifies the file location and refers to the new external file format and data source created above.
     - **4)** Finally, we select the top 100 results from the `All2019Sales` external table.
     
-4. In the CREATE EXTERNAL TABLE statement, in the **[TransactionId] nvarchar(8000)** line, change 8000 to 4000 and add `COLLATE Latin1_General_100_BIN2_UTF8`; and replace the *LOCATION* value with `sale-small/Year=2019/*/*/*/*.parquet` so that the statement becomes similar to the following (except with your unique resource SUFFIX):
+4. In the CREATE EXTERNAL TABLE statement, in the **[TransactionId] varchar(8000)** line, change 8000 to 4000 and add `COLLATE Latin1_General_100_BIN2_UTF8`; and replace the *LOCATION* value with `sale-small/Year=2019/*/*/*/*.parquet` so that the statement becomes similar to the following (except with your unique resource SUFFIX):
 
 ```sql
 CREATE EXTERNAL TABLE All2019Sales (
-    [TransactionId] nvarchar(4000) COLLATE Latin1_General_100_BIN2_UTF8,
+    [TransactionId] varchar(4000) COLLATE Latin1_General_100_BIN2_UTF8,
     [CustomerId] int,
     [ProductId] smallint,
     [Quantity] smallint,
@@ -260,7 +260,7 @@ Let's create a view to wrap a SQL query. Views allow you to reuse queries and ar
 
     ![The script is displayed.](images/create-view-script.png "Create view script")
 
-5. In the **Use SQL database** list, ensure **demo** is still selected, and then run the script.
+5. In the **Use database** list, ensure **demo** is still selected, and then run the script.
 
     We just created the view to wrap the SQL query that selects data from the CSV file, then selected rows from the view:
 
