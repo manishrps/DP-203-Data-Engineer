@@ -700,7 +700,7 @@ To do this, you will build a mapping data flow that performs the following tasks
         | userId | `userId` |
 
 
-        ![The flatten settings are configured as described.](images/data-flow-user-profiles-flatten2-settings.png "Flatten settings")
+    ![The flatten settings are configured as described.](images/data-flow-user-profiles-flatten2-settings.png "Flatten settings")
 
 22. Now it is time to join the two data sources. Select the **+** to the right of the **DeriveProductColumns** step, then select the **Join** option.
 
