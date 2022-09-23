@@ -9,7 +9,7 @@
         "Order": 1
       },
       {
-        "RawFilePath": "https://raw.githubusercontent.com/CloudLabs-MOC/DP-203-Data-Engineer/master/Instructions/Labs/LAB_02_queries_using_serverless_sql_pools.md",
+        "RawFilePath": "https://raw.githubusercontent.com/MicrosoftLearning/DP-203-Data-Engineer/master/Instructions/Labs/LAB_02_queries_using_serverless_sql_pools.md",
         "Order": 2
       }
     ]
