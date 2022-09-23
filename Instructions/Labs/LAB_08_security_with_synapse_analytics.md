@@ -129,7 +129,7 @@ It is recommended to store any secrets that are part of your pipeline in Azure K
   
     2. **Method**: Select **Get**.
 
-    3. For **Authentication** select **Managed Identity**. We have already established an Access Policy for the Managed Service Identity of our Synapse workspace, this means that the pipeline activity has permissions to access the key vault via an HTTP call.
+    3. For **Authentication** select **System assigned Managed Identity**. We have already established an Access Policy for the Managed Service Identity of our Synapse workspace, this means that the pipeline activity has permissions to access the key vault via an HTTP call.
   
     4. **Resource**: Enter **<https://vault.azure.net>**
 

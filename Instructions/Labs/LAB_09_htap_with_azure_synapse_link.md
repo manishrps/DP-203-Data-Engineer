@@ -61,119 +61,21 @@ By combining the distributed scale of Cosmos DB's transactional processing with 
 
     ![The operation completed successfully.](images/notifications-completed.png "Notifications")
 
+6. Now on the left-hand menu,  select **Azure Synapse Link**.
 
-### Task 2: Create a new Azure Cosmos DB container
-
-Tailwind Traders has an Azure Cosmos DB container named `OnlineUserProfile01`. Since we enabled the Azure Synapse Link feature _after_ the container was already created, we cannot enable the analytical store on the container. We will create a new container that has the same partition key and enable the analytical store.
-
-After creating the container, we will create a new Synapse Pipeline to copy data from the `OnlineUserProfile01` container to the new one.
-
-1. In the Azure portal (<https://portal.azure.com>), open the resource group for your lab environment.
-
-2. Select the **Azure Cosmos DB account**.
-
-    ![The Azure Cosmos DB account is highlighted.](images/resource-group-cosmos.png "Azure Cosmos DB account")
-
-3. Select **Data Explorer** on the left-hand menu.
-
-    ![The menu item is selected.](images/data-explorer-link.png "Data Explorer")
-
-4. Select **New Container**.
-
-    ![The button is highlighted.](images/new-container-button.png "New Container")
-
-5. For **Database id**, select **Use existing**, then select **`CustomerProfile` (1)**. Enter **`UserProfileHTAP`** for the **Container id (2)**, then enter **`/userId`** for the **Partition key (3)**. For **Throughput**, select **Autoscale (4)**, then enter **`4000`** for the **Max RU/s** value **(5)**. Finally, expand Advanced and set **Analytical store** to **On (6)**, then select **OK**.
-
-    ![The form is configured as described.](images/new-container.png "New container")
-
-    Here we set the `partition key` value to `userId`, because it is a field we use most often in queries and contains a relatively high cardinality (number of unique values) for good partitioning performance. We set the throughput to Autoscale with a maximum value of 4,000 request units (RUs). This means that the container will have a minimum of 400 RUs allocated (10% of the maximum number), and will scale up to a maximum of 4,000 when the scale engine detects a high enough demand to warrant increasing the throughput. Finally, we enable the **analytical store** on the container, which allows us to take full advantage of the Hybrid Transactional/Analytical Processing (HTAP) architecture from within Synapse Analytics.
-
-    Let's take a quick look at the data we will copy over to the new container.
-
-6. Expand the `OnlineUserProfile01` container underneath the **CustomerProfile** database, then select **Items (1)**. Select one of the documents **(2)** and view its contents **(3)**. The documents are stored in JSON format.
-
-    ![The container items are displayed.](images/existing-items.png "Container items")
-
-7. Select **Keys** in the left-hand menu **(1)**, then copy the **Primary Key** value **(2)** and save it to Notepad or similar for later reference. Copy the Azure Cosmos DB **account name** in the upper-left corner **(3)** and also save it to Notepad or similar text editor for later.
-
-    ![The primary key is highlighted.](images/cosmos-keys.png "Keys")
-
-    > **Note**: Take note of these values. You will need this information when creating the SQL view toward the end of the demo.
-
-8. Now on the left-hand menu,  select **Azure Synapse Link**.
-
-   a. Ensure **Account enabled** is set.\ 
-   b. Under **Enabled Azure Synapse Link for your containers** make sure *OnlineUserProfile01* and *UserProfileHTAP* are selected.
+   a. Ensure **Account enabled** is set.
+   b. Under **Enabled Azure Synapse Link for your containers** make sure *CustomerProfile and **OnlineUserProfile01* are selected.
 
     ![The Azure Cosmos DB account is highlighted.](images/enable-synapse-link-1.png "Azure Cosmos DB account")
   
-9. Select **Enable Synapse Link on your Container(s)**.
+7. Select **Enable Synapse Link on your Container(s)**.
 
     ![Enable is highlighted.](images/enable-synapse-link.png "Azure Synapse Link")
 
 
-10. You must wait for this operation to complete before continuing. You can check the status on the same page.
+8. You must wait for this operation to complete before continuing. You can check the status on the same page.
    
     ![synapse-link-progress.](images/synapse-link-progress.png "synapse-link-progress")
-
-
-### Task 3: Create and run a copy pipeline
-
-Now that we have the new Azure Cosmos DB container with the analytical store enabled, we need to copy the contents of the existing container by using a Synapse Pipeline.
-
-1. Open Synapse Studio (<https://web.azuresynapse.net/>) in a different tab, and then navigate to the **Integrate** hub.
-
-    ![The Integrate menu item is highlighted.](images/integrate-hub.png "Integrate hub")
-
-2. In the **+** menu, select **Pipeline**.
-
-    ![The new pipeline link is highlighted.](images/new-pipeline.png "New pipeline")
-
-3. Under **Activities**, expand the **Move & transform** group, then drag the **Copy data** activity onto the canvas. Set the **Name** to **`Copy Cosmos DB Container`** in the **Properties** blade.
-
-    ![The new copy activity is displayed.](images/add-copy-pipeline.png "Add copy activity")
-
-4. Select the new **Copy data** activity that you added to the canvas; and on the **Source** tab beneath the canvas, select the **asal400_customerprofile_cosmosdb** source dataset.
-
-    ![The source is selected.](images/copy-source.png "Source")
-
-5. Select the **Sink** tab, then select **+ New**.
-
-    ![The sink is selected.](images/copy-sink.png "Sink")
-
-6. Select the **Azure Cosmos DB (SQL API)** dataset type, then select **Continue**.
-
-    ![Azure Cosmos DB is selected.](images/dataset-type.png "New dataset")
-
-7. Set the following properties, then click **OK**:
-    - **Name**: Enter `cosmos_db_htap`.
-    - **Linked service**: Select **asacosmosdb01**.
-    - **Collection**: Select **UserProfileHTAP**/
-    - **Import schema**: Select **From connection/store** under **Import schema)**.
-
-    ![The form is configured as described.](images/dataset-properties.png "Set properties")
-
-8. Underneath the new sink dataset you just added, ensure that the **Insert** write behavior is selected.
-
-    ![The sink tab is displayed.](images/sink-insert.png "Sink tab")
-
-9. Select **Publish all**, then **Publish** to save the new pipeline.
-
-    ![Publish all.](images/publish-all-1.png "Publish")
-
-10. Above the pipeline canvas, select **Add trigger**, then **Trigger now**. Select **OK** to trigger the run.
-
-    ![The trigger menu is shown.](images/pipeline-trigger.png "Trigger now")
-
-11. Navigate to the **Monitor** hub.
-
-    ![Monitor hub.](images/monitor-hub.png "Monitor hub")
-
-12. Select **Pipeline runs** and wait until the pipeline run has successfully completed. You may have to select **Refresh** a few times.
-
-    ![The pipeline run is shown as successfully completed.](images/pipeline-run-status.png "Pipeline runs")
-
-    > This may take **around 4 minutes** to complete.
 
 ## Exercise 2 - Querying Azure Cosmos DB with Apache Spark for Synapse Analytics
 
@@ -187,11 +89,11 @@ Tailwind Traders is trying to solve how they can use the list of preferred produ
 
     ![Data hub.](images/data-hub.png "Data hub")
 
-2. Select the **Linked** tab and expand the **Azure Cosmos DB** section (if this is not visible, use the **&#8635;** button at the top right to refresh Synapse Studio), then expand the **asacosmosdb01 (CustomerProfile)** linked service. Right-click the **UserProfileHTAP** container, select **New notebook**, and then select **Load to DataFrame**.
+2. Select the **Linked** tab and expand the **Azure Cosmos DB** section (if this is not visible, use the **&#8635;** button at the top right to refresh Synapse Studio), then expand the **asacosmosdb01 (CustomerProfile)** linked service. Right-click the **OnlineUserProfile01** container, select **New notebook**, and then select **Load to DataFrame**.
 
-    ![The new notebook gesture is highlighted.](images/new-notebook.png "New notebook")
+    ![The new notebook gesture is highlighted.](images/new-notebook-htap.png "New notebook")
 
-    Notice that the **UserProfileHTAP** container that we created has a slightly different icon than the other container. This indicates that the analytical store is enabled.
+    Notice that the **OnlineUserProfile01** container that we created has a slightly different icon than the other container. This indicates that the analytical store is enabled.
 
 3. In the new notebook, select the **SparkPool01** Spark pool in the **Attach to** dropdown list.
 
@@ -199,7 +101,7 @@ Tailwind Traders is trying to solve how they can use the list of preferred produ
 
 4. Select **Run all**.
 
-    ![Thew new notebook is shown with the cell 1 output.](images/notebook-cell1.png "Cell 1")
+    ![Thew new notebook is shown with the cell 1 output.](images/notebook-cell2.png "Cell 1")
 
     It will take a few minutes to start the Spark session the first time.
 
@@ -329,17 +231,17 @@ Tailwind Traders wants to explore the Azure Cosmos DB analytical store with T-SQ
     USE Profiles
     GO
 
-    DROP VIEW IF EXISTS UserProfileHTAP;
+    DROP VIEW IF EXISTS OnlineUserProfile01;
     GO
 
-    CREATE VIEW UserProfileHTAP
+    CREATE VIEW OnlineUserProfile01
     AS
     SELECT
         *
     FROM OPENROWSET(
         'CosmosDB',
         N'account=YOUR_ACCOUNT_NAME;database=CustomerProfile;key=YOUR_ACCOUNT_KEY',
-        UserProfileHTAP
+        OnlineUserProfile01
     )
     WITH (
         userId bigint,
@@ -358,9 +260,9 @@ Tailwind Traders wants to explore the Azure Cosmos DB analytical store with T-SQ
 6. Use the **Run** button to run the query, which:
     - Creates a new serverless SQL pool database named **Profiles** if it does not exist
     - Changes the database context to the **Profiles** database.
-    - Drops the **UserProfileHTAP** view if it exists.
-    - Creates a SQL view named **UserProfileHTAP**.
-    - Uses the OPENROWSET statement to set the data source type to **CosmosDB**, sets the account details, and specifies that we want to create the view over the Azure Cosmos DB analytical store container named **UserProfileHTAP**.
+    - Drops the **OnlineUserProfile01** view if it exists.
+    - Creates a SQL view named **OnlineUserProfile01**.
+    - Uses the OPENROWSET statement to set the data source type to **CosmosDB**, sets the account details, and specifies that we want to create the view over the Azure Cosmos DB analytical store container named **OnlineUserProfile01**.
     - Matches the property names in the JSON documents and applies the appropriate SQL data types. Notice that we set the **preferredProducts** and **productReviews** fields to **varchar(max)**. This is because both of these properties contain JSON-formatted data within.
     - Since the **productReviews** property in the JSON documents contain nested subarrays, the script needs to "join" the properties from the document with all elements of the array. Synapse SQL enables us to flatten the nested structure by applying the OPENJSON function on the nested array. We flatten the values within **productReviews** like we did using the Python **explode** function earlier in the Synapse Notebook.
 
@@ -368,7 +270,7 @@ Tailwind Traders wants to explore the Azure Cosmos DB analytical store with T-SQ
 
     ![Data hub.](images/data-hub.png "Data hub")
 
-8. Select the **Workspace** tab and expand the **SQL database** group. Expand the **Profiles** SQL on-demand database (if you do not see this on the list, refresh the **Databases** list). Expand **Views**, then right-click the **UserProfileHTA** view, select **New SQL script**, and then **Select TOP 100 rows**.
+8. Select the **Workspace** tab and expand the **SQL database** group. Expand the **Profiles** SQL on-demand database (if you do not see this on the list, refresh the **Databases** list). Expand **Views**, then right-click the **OnlineUserProfile01** view, select **New SQL script**, and then **Select TOP 100 rows**.
 
     ![The select top 100 rows query option is highlighted.](images/new-select-query.png "New select query")
 

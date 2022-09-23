@@ -1,3 +1,9 @@
+---
+lab:
+    title: 'Real-time stream processing with Stream Analytics'
+    module: 'Module 10'
+---
+
 # Lab 10 - Real-time stream processing with Stream Analytics
 
 In this lab, you will learn how to process streaming data with Azure Stream Analytics. You will ingest vehicle telemetry data into Event Hubs, then process that data in real time, using various windowing functions in Azure Stream Analytics. They will output the data to Azure Synapse Analytics. Finally, you will learn how to scale the Stream Analytics job to increase throughput.
@@ -87,11 +93,11 @@ In this task, you will create and configure a new event hub within the provided 
     - **Send:** Unchecked
     - **Listen:** Checked
 
-        ![The Add SAS Policy form is filled out with the previously mentioned settings entered into the appropriate fields.](images/event-hubs-add-sas-policy-read.png 'Add SAS Policy')
+        ![The Add SAS Policy blade is filled out with the previously mentioned settings entered into the appropriate fields.](images/event-hubs-add-sas-policy-read.png 'Add SAS Policy')
 
         > It is a best practice to create separate policies for reading, writing, and managing events. This follows the principle of least privilege to prevent services and applications from performing unauthorized operations.
 
-9. Select **Create** on the bottom of the form when you are finished entering the values.
+9. Select **Create** on the bottom of the blade when you are finished entering the values.
 
 10. Select **+ Add** in the top toolbar to create a second new shared access policy.
 
@@ -106,11 +112,11 @@ In this task, you will create and configure a new event hub within the provided 
 
         ![The Add SAS Policy form is filled out with the previously mentioned settings entered into the appropriate fields.](images/event-hubs-add-sas-policy-write.png 'Add SAS Policy')
 
-12. Select **Create** on the bottom of the form when you are finished entering the values.
+12. Select **Create** on the bottom of the blade when you are finished entering the values.
 
 13. Select your **Write** policy from the list. Copy the **Connection string - primary key** value by selecting the Copy button to the right of the field. Save this value in Notepad or similar text editor for later.
 
-    ![The Write policy is selected and its blade displayed. The Copy button next to the Connection string - primary key field is highlighted.](images/event-hubs-write-policy-key.png 'SAS Policy: Write')
+       ![The Write policy is selected and its blade displayed. The Copy button next to the Connection string primary key field is highlighted.](images/event-hubs-write-policy-key.png 'SAS Policy Write')
 
 ### Task 2: Configure Synapse Analytics
 
@@ -208,13 +214,13 @@ In this task, you will configure Stream Analytics to use the event hub you creat
     - **Select Azure Synapse Analytics from your subscriptions:** Selected.
     - **Subscription:** Select the subscription you are using for this lab.
     - **Database:** Select **SQLPool01**. Make sure your correct Synapse workspace name appears under **Server name**.
-    - **Authentication mode:** Select **Connection string**.
+    - **Authentication mode:** Select **SQL Server Authentication**.
     - **Username:**: `asa.sql.admin`
     - **Password:** Enter the SQL admin password value you entered when deploying the lab environment, or which was provided to you as part of your hosted lab environment. If you are unsure about your SQL admin username, navigate to the Synapse workspace in the Azure resource group. The SQL admin username is shown in the Overview pane.
     - **Server name**: asaworkspace*xxxxxxx*
     - **Table:** `dbo.VehicleAverages`
 
-        ![The New Output form is filled out with the previously mentioned settings entered into the appropriate fields.](images/synapse-new-output.png "New Output")
+        ![The New Output form is filled out with the previously mentioned settings entered into the appropriate fields.](images/synapse-new-output-1.png "New Output")
 
         > **Note:** If you are unsure about your SQL admin username, navigate to the Synapse workspace in the Azure resource group. The SQL admin username is shown in the Overview pane.
 
