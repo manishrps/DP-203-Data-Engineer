@@ -67,7 +67,7 @@ When dealing with connectivity to external data sources and services, sensitive 
 
     ![Key vault is selected in the resource group.](images/resource-group-key-vault.png "Key vault")
 
-2. On the left menu, under Settings, select **Access Policies**.
+2. On the left menu, select **Access Policies**.
 
 3. Observe that Managed Service Identity (MSI) representing your Synapse workspace (it has a name similar to **asaworkspace*xxxxxxx***) has already been listed under Application and it has 4 selected Secret Management Operations.
 
@@ -103,7 +103,7 @@ It is recommended to store any secrets that are part of your pipeline in Azure K
 
    ![In Azure Key Vault, Secrets is selected from the left menu, and + Generate/Import is selected from the top toolbar.](images/lab5_pipelinekeyvaultsecretmenu.png)
 
-3. Create a secret, with the name `PipelineSecret` and assign it a value of `IsNotASecret`, and select the **Create** button.
+3. Create a secret, with the name `PipelineSecret` and assign it a secret value of `IsNotASecret`, and select the **Create** button.
 
    ![The Create a secret form is displayed populated with the specified values.](images/lab5_keyvaultcreatesecretforpipeline.png)
 
@@ -131,8 +131,12 @@ It is recommended to store any secrets that are part of your pipeline in Azure K
 
     3. For **Authentication** select **System assigned Managed Identity**. We have already established an Access Policy for the Managed Service Identity of our Synapse workspace, this means that the pipeline activity has permissions to access the key vault via an HTTP call.
   
-    4. **Resource**: Enter **<https://vault.azure.net>**
-
+    4. **Resource**: Enter 
+    
+       ```  
+       https://vault.azure.net
+       ```
+       
         ![The Web Activity Settings tab is selected and the form is populated with the values indicated above.](images/lab5_pipelineconfigurewebactivity.png)
 
 9. From the Activities pane, add a **Set variable** activity to the design surface of the pipeline.
