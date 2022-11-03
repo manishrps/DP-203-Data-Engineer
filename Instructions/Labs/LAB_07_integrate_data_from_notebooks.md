@@ -22,7 +22,7 @@ Before starting this lab, you should complete **Lab 6: *Transform data with Azur
 >           - **Source**: Azure Cosmos DB (SQL API)
 >           - **Name**: asal400_customerprofile_cosmosdb
 >           - **Linked service**: asacosmosdb01
->           - **Collection**: OnlineUserProfile01
+>           - **Container**: OnlineUserProfile01
 >       - asal400_ecommerce_userprofiles_source
 >           - **Source**: Azure Data Lake Storage Gen2
 >           - **Format**: JSON
@@ -144,7 +144,7 @@ In this step, you create a new integration pipeline to execute the data flow.
 
     ![The name is set on the general tab as described.](images/pipeline-data-flow-general-datalake.png "Name on the General tab")
 
-5. On the **Settings** tab, select the **user_profiles_to_datalake** data flow, ensure **AutoResolveIntegrationRuntime** is selected. Choose the **Basic (General purpose)** compute type and set the core count to **4 (+ 4 Driver cores)**.
+5. On the **Settings** tab, select the **user_profiles_to_datalake** data flow, ensure **AutoResolveIntegrationRuntime** is selected. Choose the **Basic (General purpose)** compute type and set the core count to **4 (+ 4 Driver cores)** from **Advanced** dropdown.
 
     ![The mapping data flow activity settings are configured as described.](images/pipeline-user-profiles-datalake-data-flow-settings.png "Mapping data flow activity settings")
 
